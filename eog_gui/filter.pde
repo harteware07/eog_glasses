@@ -5,7 +5,7 @@ public class FilterLive {
   private HighPassSP hp;
   private ChebFilter chb;
   private float[] samples;
-  private float bits = 1024.0f; //65536.0;   //1024.0;
+  private float bits = 65536.0;   //1024.0;
 
   private boolean bpf_update = true;
 
@@ -127,7 +127,7 @@ public class FilterOffline {
   private HighPassSP hp_ch1, hp_ch2;
   private ChebFilter chb_ch1, chb_ch2;
   private float[] samples;
-  private float bits = 1024.0f; //65536.0;   //1024.0;
+  private float bits = 65536.0;   //1024.0;
 
   private boolean bpf_update = true;
 
@@ -215,7 +215,7 @@ public class FilterOffline {
     }
   }
   void initFilter() {
-    int offset = 0;
+    int offset = 32768;
     initFilterWithFadeIn();
 
     for (int i = 0; i < filteredData_ch1.length - 1; i++) {
@@ -234,7 +234,7 @@ public class FilterOffline {
 
       filteredData_ch1[i] = (int)(samples[0] + offset);
 
-      offset = 0;
+      //offset = 0;
       samples[0] = rawData_ch1[i];
       if (highpass1_chkbx.isSelected()) 
         hp_ch2.process(samples);
@@ -384,8 +384,9 @@ public class FilterOffline {
     //  normaliseSignal(200, filteredData_ch1);
     //  normaliseSignal(200, filteredData_ch2);
     //}
-
-    pushValueF(pp.getA(), filteredData_ch1);
+    
+    
+    pushValueF(pp.getA() - 65000, filteredData_ch1);
     pushValueF(pp.getB(), filteredData_ch2);
 
     offlineFilter.setFilterUpdated();

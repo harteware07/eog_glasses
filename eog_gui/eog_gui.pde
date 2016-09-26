@@ -93,6 +93,53 @@ boolean detectSymbol = false;
 boolean liveData = true;
 boolean loopData = false;
 
+void processOfflineData() {
+ // MovingAverageSquare mvsq = new MovingAverageSquare(50);
+
+
+
+  if (liveData != true && serialAvailable) {
+    port.clear(); // flush data
+  }
+
+  if (offlineFilter.wasFilter1Updated()) {
+  //  ch_h_mv = new float[osziW];
+
+    offlineFilter.initFilter(); // use filter
+/*
+    double daub[] = new double[osziW];
+    for (int i = 0; i < ch_h.raw.length; i++) {
+      daub[i] = (double) ch_h.raw[i];
+      ch_h_mv[i] = mvsq.calculate(filteredData_ch1[i]);
+    }
+    mvsq.normalise(ch_h_mv);
+
+    daubech.daubTrans(daub);
+    // eogFilter.normaliseDouble(daub);
+
+    daubech.decomposeDaub(daub);
+    daubech.invDaubTrans(daub);
+
+    for (int i = 0; i < ch_h.raw.length; i++) {
+      daub_ch1[i] = (int) ( daub[i] * knob_gain.getValueF() );
+    }
+
+*/
+    if (normlz_chkbx.isSelected()) {
+      offlineFilter.normaliseSignal(50, filteredData_ch1);
+      //   eogFilter.normaliseSignal(200, filteredData_ch2);
+    }
+
+    //deriative_ch1 = eogFilter.calcDeriative(ch_h.filtered, 7);
+
+    //PeakDetector.drawDetectorOffline(ch_h.filtered, pks_ch1, imp_ch1);
+    //PeakDetector.drawDetectorOffline(daub_ch1, daub_peaks_ch1, daub_imp_ch1);
+
+    offlineFilter.clearFilter1Updated();
+  }
+
+ 
+}
 
 void pushValueI(int value, int[] array) {
   for (int i=0; i<osziW - 1; i++)
@@ -134,7 +181,7 @@ void draw()
   if (liveData) {
     sampleSerial();
   } else {
-//    processOfflineData();
+    processOfflineData();
   }
 
   drawSignals();

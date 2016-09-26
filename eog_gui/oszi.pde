@@ -228,12 +228,12 @@ void drawSignals() {
   color pink = color(#FF05FC);
   color orange = color(#FF7605);
 
-/*
+
   if (normlz_chkbx.isSelected()) {
-    offlineFilter.normaliseSignal(0, ch_h.filtered);
-    offlineFilter.normaliseSignal(0, ch_v.filtered);
+    offlineFilter.normaliseSignal(0, filteredData_ch1);
+   // offlineFilter.normaliseSignal(0, ch_v.filtered);
   }
-*/
+
 
   // channel 1
   drawOszi(0, 0);
@@ -250,6 +250,7 @@ void drawSignals() {
 
   // channel 2
   drawOszi(1, 0);
+  drawSignalF(1, 0, filteredData_ch1, blue);
   //drawSignalF(1, 0, filteredData_ch2, blue);
  // drawSignalI(1, 0, rawData_ch2, green);
   //drawSignalI(1, 0, daub_ch1, blue);
