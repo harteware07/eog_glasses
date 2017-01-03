@@ -24,9 +24,9 @@ public class FilterLive {
   }
 
   void setHighPass() {
-    float v = round(knob3.getValueF(), 3);
-    hp = new HighPassSP(v, samplesPerSec);  // freq, sampleRate
-    chb = new ChebFilter(v, ChebFilter.HP, 0.0005f, 16, samplesPerSec);  // frequency, type, ripple, poles, samplesPerSec
+ //   float v = round(knob3.getValueF(), 3);
+//    hp = new HighPassSP(v, samplesPerSec);  // freq, sampleRate
+  //  chb = new ChebFilter(v, ChebFilter.HP, 0.0005f, 16, samplesPerSec);  // frequency, type, ripple, poles, samplesPerSec
   }
 
   void setFilterUpdated() {
@@ -160,11 +160,7 @@ public class FilterOffline {
   }
 
   void setHighPass() {
-    float v = round(knob3.getValueF(), 3);
-    hp_ch1 = new HighPassSP(v, samplesPerSec);  // freq, sampleRate
-    hp_ch2 = new HighPassSP(v, samplesPerSec);  // freq, sampleRate
 
-    chb_ch1 = new ChebFilter(v, ChebFilter.HP, 0.0005f, 16, samplesPerSec);  // frequency, type, ripple, poles, samplesPerSec
   }
   void setFilterUpdated() {
     bpf_update = true;
@@ -181,8 +177,8 @@ public class FilterOffline {
     int zero = 0; //(int)bits / 2;
     int offset = filteredData_ch1.length - fadetime;
 
-    float m1 = float((rawData_ch1[rawData_ch1.length - 1] - zero)) / (float)fadetime;   // y = m*x
-    float m2 = float((rawData_ch2[rawData_ch2.length - 1] - zero)) / (float)fadetime;   // y = m*x
+    float m1 = ((rawData_ch1[rawData_ch1.length - 1] - zero)) / (float)fadetime;   // y = m*x
+    float m2 = ((rawData_ch2[rawData_ch2.length - 1] - zero)) / (float)fadetime;   // y = m*x
 
     //println("raw: " + rawData_ch1[rawData_ch1.length - 1] + " m: " + m1 + "  m*fadetime: " + m1*(float)fadetime);
 
@@ -386,8 +382,8 @@ public class FilterOffline {
     //}
     
     
-    pushValueF(pp.getA() - 65000, filteredData_ch1);
-    pushValueF(pp.getB(), filteredData_ch2);
+//    pushValueF(pp.getA() - 65000, filteredData_ch1);
+//    pushValueF(pp.getB(), filteredData_ch2);
 
     offlineFilter.setFilterUpdated();
   }

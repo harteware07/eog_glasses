@@ -70,25 +70,24 @@ public void lowpass1_clicked1(GCheckbox source, GEvent event) { //_CODE_:highpas
   offlineFilter.setFilterUpdated();
 } //_CODE_:highpass1_chkbx:632642:
 
-public void knob3_turn1(GKnob source, GEvent event) { //_CODE_:knob3:886781:
-  hp_cutoff_v.setText(str(round(knob3.getValueF(), 3)));
-  offlineFilter.setHighPass();
-  offlineFilter.setFilterUpdated();
-} //_CODE_:knob3:886781:
+public void hp_turn(GKnob source, GEvent event) { //_CODE_:hp_knob:886781:
+  hp_cutoff_v.setText(str(round(hp_knob.getValueF(), 3)));
+  h_filter.setHighPass();
+} //_CODE_:hp_knob:886781:
 
 public void normalize_clicked1(GCheckbox source, GEvent event) { //_CODE_:normlz_chkbx:269126:
   offlineFilter.setFilterUpdated();
 } //_CODE_:normlz_chkbx:269126:
 
-public void knob4_turn1_tesh_v(GKnob source, GEvent event) { //_CODE_:knob4:464915:
- // PeakDetector.setTreshValues(knob4.getValueI(), knob5.getValueI());
-  offlineFilter.setFilterUpdated();
-} //_CODE_:knob4:464915:
+public void tresh_v_knob_turn(GKnob source, GEvent event) { //_CODE_:tresh_v_knob:464915:
+  tresh_v.setText(str(tresh_v_knob.getValueI()));
+  h_peaks.setTreshValues(tresh_v_knob.getValueI(), tresh_t_knob.getValueI() );
+} //_CODE_:tresh_v_knob:464915:
 
-public void knob5_turn1_tresh_t(GKnob source, GEvent event) { //_CODE_:knob5:515107:
- // PeakDetector.setTreshValues(knob4.getValueI(), knob5.getValueI());
-  offlineFilter.setFilterUpdated();
-} //_CODE_:knob5:515107:
+public void tresh_t_knob_turn(GKnob source, GEvent event) { //_CODE_:tresh_t_knob:515107:
+  tresh_t.setText(str(tresh_t_knob.getValueI()));
+  h_peaks.setTreshValues(tresh_v_knob.getValueI(), tresh_t_knob.getValueI() );
+} //_CODE_:tresh_t_knob:515107:
 
 public void detectSymbol_click1(GButton source, GEvent event) { //_CODE_:button4:951340:
   detectSymbol = !detectSymbol;
@@ -134,6 +133,13 @@ public void d2_chkbx_clicked(GCheckbox source, GEvent event) { //_CODE_:d2_chkbx
   offlineFilter.setFilterUpdated();
 } //_CODE_:d2_chkbx:308183:
 
+public void loop_clicked1(GCheckbox source, GEvent event) { //_CODE_:loop_chkbx:905008:
+} //_CODE_:loop_chkbx:905008:
+
+public void knob6_turn1(GKnob source, GEvent event) { //_CODE_:knob6:690065:
+  println("knob6 - GKnob >> GEvent." + event + " @ " + millis());
+} //_CODE_:knob6:690065:
+
 
 
 // Create all the GUI controls. 
@@ -166,7 +172,7 @@ public void createGUI(){
   button1.setText("Pause");
   button1.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
   button1.addEventHandler(this, "button1_click1");
-  button2 = new GButton(this, 140, 470, 80, 30);
+  button2 = new GButton(this, 140, 530, 80, 30);
   button2.setText("Save Selection");
   button2.setLocalColorScheme(GCScheme.RED_SCHEME);
   button2.addEventHandler(this, "button2_click1");
@@ -174,7 +180,7 @@ public void createGUI(){
   button3.setText("Load Data");
   button3.setLocalColorScheme(GCScheme.RED_SCHEME);
   button3.addEventHandler(this, "button3_click1");
-  notch1_chkbx = new GCheckbox(this, 370, 430, 120, 20);
+  notch1_chkbx = new GCheckbox(this, 410, 450, 120, 20);
   notch1_chkbx.setText("50Hz Notch");
   notch1_chkbx.setOpaque(false);
   notch1_chkbx.addEventHandler(this, "notch1_clicked");
@@ -224,7 +230,7 @@ public void createGUI(){
   label2.setOpaque(false);
   gain_v = new GLabel(this, 1060, 550, 60, 20);
   gain_v.setOpaque(false);
-  lowpass1_chkbx = new GCheckbox(this, 370, 450, 120, 20);
+  lowpass1_chkbx = new GCheckbox(this, 410, 470, 120, 20);
   lowpass1_chkbx.setText("15 Hz Lowpass");
   lowpass1_chkbx.setOpaque(false);
   lowpass1_chkbx.addEventHandler(this, "lowpass1_clicked");
@@ -235,54 +241,54 @@ public void createGUI(){
   highpass1_chkbx.setOpaque(false);
   highpass1_chkbx.addEventHandler(this, "lowpass1_clicked1");
   highpass1_chkbx.setSelected(true);
-  knob3 = new GKnob(this, 550, 460, 60, 60, 0.8);
-  knob3.setTurnRange(110, 70);
-  knob3.setTurnMode(GKnob.CTRL_HORIZONTAL);
-  knob3.setSensitivity(1);
-  knob3.setShowArcOnly(false);
-  knob3.setOverArcOnly(false);
-  knob3.setIncludeOverBezel(false);
-  knob3.setShowTrack(true);
-  knob3.setLimits(2.0, 0.0, 5.0);
-  knob3.setShowTicks(true);
-  knob3.setOpaque(false);
-  knob3.addEventHandler(this, "knob3_turn1");
+  hp_knob = new GKnob(this, 550, 460, 60, 60, 0.8);
+  hp_knob.setTurnRange(110, 70);
+  hp_knob.setTurnMode(GKnob.CTRL_HORIZONTAL);
+  hp_knob.setSensitivity(1);
+  hp_knob.setShowArcOnly(false);
+  hp_knob.setOverArcOnly(false);
+  hp_knob.setIncludeOverBezel(false);
+  hp_knob.setShowTrack(true);
+  hp_knob.setLimits(4.0, 0.0, 5.0);
+  hp_knob.setShowTicks(true);
+  hp_knob.setOpaque(false);
+  hp_knob.addEventHandler(this, "hp_turn");
   label3 = new GLabel(this, 550, 520, 60, 20);
   label3.setText("Cutoff");
   label3.setOpaque(false);
   hp_cutoff_v = new GLabel(this, 550, 550, 60, 20);
   hp_cutoff_v.setOpaque(false);
-  normlz_chkbx = new GCheckbox(this, 280, 430, 90, 20);
+  normlz_chkbx = new GCheckbox(this, 410, 430, 90, 20);
   normlz_chkbx.setText("Normalize");
   normlz_chkbx.setOpaque(false);
   normlz_chkbx.addEventHandler(this, "normalize_clicked1");
   label_fileLoaded = new GLabel(this, 10, 220, 370, 20);
   label_fileLoaded.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
   label_fileLoaded.setOpaque(false);
-  knob4 = new GKnob(this, 20, 270, 60, 60, 0.8);
-  knob4.setTurnRange(110, 70);
-  knob4.setTurnMode(GKnob.CTRL_HORIZONTAL);
-  knob4.setSensitivity(1);
-  knob4.setShowArcOnly(false);
-  knob4.setOverArcOnly(false);
-  knob4.setIncludeOverBezel(false);
-  knob4.setShowTrack(true);
-  knob4.setLimits(1.0, 0.0, 250.0);
-  knob4.setShowTicks(true);
-  knob4.setOpaque(false);
-  knob4.addEventHandler(this, "knob4_turn1_tesh_v");
-  knob5 = new GKnob(this, 100, 270, 60, 60, 0.8);
-  knob5.setTurnRange(110, 70);
-  knob5.setTurnMode(GKnob.CTRL_HORIZONTAL);
-  knob5.setSensitivity(1);
-  knob5.setShowArcOnly(false);
-  knob5.setOverArcOnly(false);
-  knob5.setIncludeOverBezel(false);
-  knob5.setShowTrack(true);
-  knob5.setLimits(20.0, 1.0, 100.0);
-  knob5.setShowTicks(true);
-  knob5.setOpaque(false);
-  knob5.addEventHandler(this, "knob5_turn1_tresh_t");
+  tresh_v_knob = new GKnob(this, 20, 270, 60, 60, 0.8);
+  tresh_v_knob.setTurnRange(110, 70);
+  tresh_v_knob.setTurnMode(GKnob.CTRL_HORIZONTAL);
+  tresh_v_knob.setSensitivity(1);
+  tresh_v_knob.setShowArcOnly(false);
+  tresh_v_knob.setOverArcOnly(false);
+  tresh_v_knob.setIncludeOverBezel(false);
+  tresh_v_knob.setShowTrack(true);
+  tresh_v_knob.setLimits(1.0, 0.0, 250.0);
+  tresh_v_knob.setShowTicks(true);
+  tresh_v_knob.setOpaque(false);
+  tresh_v_knob.addEventHandler(this, "tresh_v_knob_turn");
+  tresh_t_knob = new GKnob(this, 100, 270, 60, 60, 0.8);
+  tresh_t_knob.setTurnRange(110, 70);
+  tresh_t_knob.setTurnMode(GKnob.CTRL_HORIZONTAL);
+  tresh_t_knob.setSensitivity(1);
+  tresh_t_knob.setShowArcOnly(false);
+  tresh_t_knob.setOverArcOnly(false);
+  tresh_t_knob.setIncludeOverBezel(false);
+  tresh_t_knob.setShowTrack(true);
+  tresh_t_knob.setLimits(20.0, 1.0, 100.0);
+  tresh_t_knob.setShowTicks(true);
+  tresh_t_knob.setOpaque(false);
+  tresh_t_knob.addEventHandler(this, "tresh_t_knob_turn");
   label5 = new GLabel(this, 20, 250, 60, 20);
   label5.setText("Tresh v");
   label5.setOpaque(false);
@@ -355,6 +361,24 @@ public void createGUI(){
   label7.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
   label7.setText("Wavelet Decomposition");
   label7.setOpaque(false);
+  loop_chkbx = new GCheckbox(this, 230, 440, 50, 20);
+  loop_chkbx.setTextAlign(GAlign.LEFT, GAlign.MIDDLE);
+  loop_chkbx.setText("loop");
+  loop_chkbx.setOpaque(false);
+  loop_chkbx.addEventHandler(this, "loop_clicked1");
+  loop_chkbx.setSelected(true);
+  knob6 = new GKnob(this, 290, 420, 50, 40, 0.8);
+  knob6.setTurnRange(110, 70);
+  knob6.setTurnMode(GKnob.CTRL_HORIZONTAL);
+  knob6.setSensitivity(1);
+  knob6.setShowArcOnly(false);
+  knob6.setOverArcOnly(false);
+  knob6.setIncludeOverBezel(false);
+  knob6.setShowTrack(true);
+  knob6.setLimits(0.5, 0.0, 1.0);
+  knob6.setShowTicks(true);
+  knob6.setOpaque(false);
+  knob6.addEventHandler(this, "knob6_turn1");
 }
 
 // Variable declarations 
@@ -376,13 +400,13 @@ GLabel label2;
 GLabel gain_v; 
 GCheckbox lowpass1_chkbx; 
 GCheckbox highpass1_chkbx; 
-GKnob knob3; 
+GKnob hp_knob; 
 GLabel label3; 
 GLabel hp_cutoff_v; 
 GCheckbox normlz_chkbx; 
 GLabel label_fileLoaded; 
-GKnob knob4; 
-GKnob knob5; 
+GKnob tresh_v_knob; 
+GKnob tresh_t_knob; 
 GLabel label5; 
 GLabel label6; 
 GLabel tresh_v; 
@@ -400,3 +424,5 @@ GCheckbox d4_chkbx;
 GCheckbox d3_chkbx; 
 GCheckbox d2_chkbx; 
 GLabel label7; 
+GCheckbox loop_chkbx; 
+GKnob knob6; 

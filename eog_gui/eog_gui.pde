@@ -17,8 +17,8 @@ import processing.serial.*;
 Serial port;  // Create object from Serial class
 boolean serialAvailable = true;
 int val;      // Data received from the serial port
-int[] rawData_ch1;
-int[] rawData_ch2;
+float[] rawData_ch1;
+float[] rawData_ch2;
 //int[] buffer;
 
 float[] filteredData_ch1;
@@ -46,9 +46,9 @@ void setup() {
   center_v.setText(str(knob1.getValueI()));
   width_v.setText(str(knob2.getValueI()));
   gain_v.setText(str(knob_gain.getValueF()));
-  hp_cutoff_v.setText(str(round(knob3.getValueF(), 3)));
-  tresh_v.setText(str(knob4.getValueI()));
-  tresh_t.setText(str(knob5.getValueI()));
+  hp_cutoff_v.setText(str(round(hp_knob.getValueF(), 3)));
+  tresh_v.setText(str(tresh_v_knob.getValueI()));
+  tresh_t.setText(str(tresh_t_knob.getValueI()));
 
   try {
     port = new Serial(this, Serial.list()[0], 115200);
@@ -59,8 +59,8 @@ void setup() {
     serialAvailable = false;
   }
 
-  rawData_ch1 = new int[osziW];
-  rawData_ch2 = new int[osziW];
+  rawData_ch1 = new float[osziW];
+  rawData_ch2 = new float[osziW];
 
 
   filteredData_ch1 = new float[osziW];
@@ -81,11 +81,11 @@ void setup() {
 
 
   // LOAD TEST DATA AT STARTUP
-  // File f = new File("/home/loco/data/eog_stephan/u_m_d_m_30");
+  File f = new File("/home/loco/data/eog_stephan/m-l_m-r_45");
   // File f = new File("/home/loco/cmcloud/vcloud/cm-intern/Jan/processing/saveData/data/eog_stephan/m-r_m-l_30");
   // File f = new File("P:\cm-intern\Jan\processing\saveData\data\eog_lr\m-r_m-l_notch");
 
-  // loadFileToBuff(f);
+  loadFileToBuff(f);
 }
 
 
@@ -181,7 +181,7 @@ void draw()
   if (liveData) {
     sampleSerial();
   } else {
-    processOfflineData();
+  //  processOfflineData();
   }
 
   drawSignals();

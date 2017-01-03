@@ -1,10 +1,13 @@
+float bitwidth = 1024.0f;   //65536.0f;
+int offset = -512;
+
 int marginTop = 20;
 int marginLeft = 20;
 
 int osziH = 100;
 int osziW = 1024;
 
-int zeroline = osziH / 2; 
+int zeroline = (int) bitwidth/2; 
 
 public class OsziSelector {
 
@@ -121,7 +124,8 @@ public class OsziSelector {
 
 int getY(int val) {
   // scaling for the y value
-  return (int)((osziH * val ) / 65536.0f);
+  val = (int)bitwidth - val;
+  return (int)((osziH * val) / bitwidth);
 }
 
 
@@ -170,14 +174,14 @@ void drawTreshhold(int t, color c) {
 void drawAverage() {
   /*
   PeakDetector.calcAverage();
-  int avg1 = getY(PeakDetector.filteredAvg_ch1) + marginTop;
-  stroke(0, 0, 255);
-  line(marginLeft, avg1, osziW+marginLeft, avg1);
-
-  int dd1 = getY(PeakDetector.detectAvg_ch1) + marginTop;
-  stroke(0, 255, 255);
-  line(marginLeft, dd1, osziW+marginLeft, dd1);
-  */
+   int avg1 = getY(PeakDetector.filteredAvg_ch1) + marginTop;
+   stroke(0, 0, 255);
+   line(marginLeft, avg1, osziW+marginLeft, avg1);
+   
+   int dd1 = getY(PeakDetector.detectAvg_ch1) + marginTop;
+   stroke(0, 255, 255);
+   line(marginLeft, dd1, osziW+marginLeft, dd1);
+   */
 }
 
 void drawSignalI(int nr, int padding, int val[], color c) {
@@ -231,28 +235,30 @@ void drawSignals() {
 
   if (normlz_chkbx.isSelected()) {
     offlineFilter.normaliseSignal(0, filteredData_ch1);
-   // offlineFilter.normaliseSignal(0, ch_v.filtered);
+    // offlineFilter.normaliseSignal(0, ch_v.filtered);
   }
 
 
   // channel 1
   drawOszi(0, 0);
-   drawSignalI(0, 0, rawData_ch1, green);
-  //drawSignalF(0, 0, filteredData_ch1, blue);
- // drawSignalF(0, 0, ch_h_mv, orange);
+  drawSignalF(0, 0, rawData_ch1, green);
+  drawVerticalMarker(0, 0, pks_ch1, pink);
+  drawSignalF(0, 0, filteredData_ch1, blue);
 
 
-//  drawTreshhold(slider1.getValueI(), pink);
-//  drawTreshhold(slider2.getValueI(), orange);
+  //  drawTreshhold(slider1.getValueI(), pink);
+  //  drawTreshhold(slider2.getValueI(), orange);
 
   //drawSignalI(0, 0, pks_ch1, red);
   //drawVerticalMarker(0, 0, imp_ch1, pink);
 
   // channel 2
   drawOszi(1, 0);
-  drawSignalF(1, 0, filteredData_ch1, blue);
+  
+  
+
   //drawSignalF(1, 0, filteredData_ch2, blue);
- // drawSignalI(1, 0, rawData_ch2, green);
+  // drawSignalI(1, 0, rawData_ch2, green);
   //drawSignalI(1, 0, daub_ch1, blue);
   //drawSignal(1, 0, daub_peaks_ch1, red);
   //drawAverage();
