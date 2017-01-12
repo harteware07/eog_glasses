@@ -81,11 +81,11 @@ void setup() {
 
 
   // LOAD TEST DATA AT STARTUP
-  File f = new File("/home/loco/data/eog_stephan/m-l_m-r_45");
+ // File f = new File("/home/loco/data/eog_stephan/m-l_m-r_45");
   // File f = new File("/home/loco/cmcloud/vcloud/cm-intern/Jan/processing/saveData/data/eog_stephan/m-r_m-l_30");
   // File f = new File("P:\cm-intern\Jan\processing\saveData\data\eog_lr\m-r_m-l_notch");
 
-  loadFileToBuff(f);
+  //loadFileToBuff(f);
 }
 
 
