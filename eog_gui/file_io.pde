@@ -2,20 +2,19 @@ int samplerateStart = 0;
 int samplerateStop = 0;
 float samplerate = 0;
 int counter=0;
-
+String loopLines[];
 void sampleSerial() {  
-  
+
   int inbyte;
-  int value_ch1 = -1;
-  int value_ch2 = -1;
+  Sample sample = new Sample();
 
   while (port.available() >= 7) {
     inbyte = port.read();
 
     if (inbyte == 0xa0) {
       counter = port.read();
-      value_ch1 = ( (port.read() << 8) | port.read());
-      value_ch2 = ( (port.read() << 8) | port.read() );
+      sample.v1 = ( (port.read() << 8) | port.read());
+      sample.h = ( (port.read() << 8) | port.read() );
 
       // println("++" + value_ch1);
       /*
@@ -23,12 +22,8 @@ void sampleSerial() {
        print("\t");
        println(value);
        */
-       
-      pushValueI(value_ch1, rawData_ch1);
-      pushValueI(value_ch2, rawData_ch2);
-      
-      pushValueF(value_ch1, filteredData_ch1);
 
+      processData(sample);
 
       //PointAB_float pp= new PointAB_float((float)value_ch1, (float)value_ch2);
       //eogFilter.processSignals(pp);
@@ -36,9 +31,8 @@ void sampleSerial() {
 
       // calc framerate 
       if (counter == 0) {
-        samplerateStart = millis();  
-      }
-      else if (counter == 250) {
+        samplerateStart = millis();
+      } else if (counter == 250) {
         samplerateStop = millis();
         samplerate = (float) 251 / (float)(samplerateStop - samplerateStart) * 1000;
         println((int)samplerate);
@@ -52,9 +46,6 @@ void sampleSerial() {
     }
   }
 }
-
-
-
 
 
 String[] listFileNames(String dir) {
@@ -123,27 +114,48 @@ int[][] loadSignalsToArray(String path, String signal) {
   return signals;
 }
 
+/*
 int loadSignals(String path, int[] bufferA, int[] bufferB) {
+ int j;
+ String lines[] = loadStrings(path);
+ println("Loading " + lines.length + " samples.");
+ for (j = 0; j < lines.length; j++) {
+ // println(lines[j]);
+ }
+ for (j = 0; j < lines.length; j++) {
+ PointAB_int pp = splitChannels(lines[j]);
+ if (j >= bufferA.length) {
+ break;
+ } else {
+ bufferA[j] = pp.getA();// - 512;
+ bufferB[j] = pp.getB();// - 512;
+ }
+ }
+ for (; j < bufferA.length; j++) {  // fill with zeros if too short
+ bufferA[j] = 0;
+ bufferB[j] = 0;
+ }
+ return lines.length;
+ } 
+ */
+
+void fileDataReader(String path) {
   int j;
-  String lines[] = loadStrings(path);
-  println("Loading " + lines.length + " samples.");
-  for (j = 0; j < lines.length; j++) {
-    // println(lines[j]);
-  }
-  for (j = 0; j < lines.length; j++) {
-    PointAB_int pp = splitChannels(lines[j]);
-    if (j >= bufferA.length) {
-      break;
-    } else {
-      bufferA[j] = pp.getA();// - 512;
-      bufferB[j] = pp.getB();// - 512;
+  loopLines = loadStrings(path);
+  println("Loading " + loopLines.length + " samples.");
+
+  thread("loopSignal");
+}  
+
+void loopSignal() {
+  int j;
+  
+  do {
+    for (j = 0; j < loopLines.length; j++) {
+      Sample sample = splitLines(loopLines[j]);
+      processData(sample);
     }
-  }
-  for (; j < bufferA.length; j++) {  // fill with zeros if too short
-    bufferA[j] = 0;
-    bufferB[j] = 0;
-  }
-  return lines.length;
+  } while(loop_chkbx.isSelected());
 }
 
 int saveSignals(String path, float[] bufferA, float[] bufferB, int a, int b) {
@@ -164,7 +176,14 @@ int saveSignals(String path, float[] bufferA, float[] bufferB, int a, int b) {
   return 1;
 }
 
-
+Sample splitLines(String line) {
+  String[] pieces = split(line, " ");
+  Sample sample;
+  sample = new Sample();
+  sample.h = float(pieces[0]);
+  sample.v1 = float(pieces[1]);
+  return sample;
+}
 
 PointAB_int splitChannels(String line) {
   String[] pieces = split(line, " ");
@@ -200,8 +219,9 @@ void loadFileToBuff(File selection) {
     println("Window was closed or the user hit cancel.");
   } else {
     println("User selected " + selection.getAbsolutePath());
-    loadSignals(selection.getAbsolutePath(), rawData_ch1, rawData_ch2);
+    // loadSignals(selection.getAbsolutePath(), rawData_ch1, rawData_ch2);
+    fileDataReader(selection.getAbsolutePath());
     label_fileLoaded.setText("Loaded File: " + selection.getName());
-    offlineFilter.setFilterUpdated();
+    //offlineFilter.setFilterUpdated();
   }
 }

@@ -1,3 +1,38 @@
+class PeakData {
+  int len;
+  int max;
+  int pol;
+  int a;
+
+  public PeakData() {
+  }
+
+  public PeakData(int len_, int max_, int pol_, int a_) {
+    len = len_;
+    max = max_;
+    pol = pol_;
+    a = a_;
+  }
+  
+  void reset() {
+    len = 0;
+    max = 0;
+    pol = 0;
+    a = 0;
+  }
+}
+
+class Sample {
+  float v1;
+  float h;
+
+  public Sample() {
+    v1 = 0;
+    h = 0;
+  }
+}
+
+
 class PointAB_int {
   private int a;
   private int b;
@@ -59,3 +94,9 @@ class PointAB_float {
 float round(float number, float decimal) {
   return (float)(round((number*pow(10, decimal))))/pow(10, decimal);
 } 
+
+void pushPeakData(PeakData value, PeakData[] array) {
+  for (int i=0; i<array.length - 1; i++)
+    array[i] = array[i+1];
+  array[array.length - 1] = value;
+}
