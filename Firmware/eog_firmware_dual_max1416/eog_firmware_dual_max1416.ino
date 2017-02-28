@@ -11,6 +11,7 @@
 #define ADCRST 9
 #define SPICLOCK 13
 #define CAL_SIG 7
+#define STAT_LED A5 // analog pin
 
 // All definitions
 #define NUMCHANNELS 2
@@ -44,6 +45,8 @@ void setup() {
 
   noInterrupts();  // Disable all interrupts before initialization
 
+  pinMode(STAT_LED, OUTPUT);
+
   pinMode(CAL_SIG, OUTPUT);
 
   pinMode(DRDY_CH1, INPUT);
@@ -51,7 +54,7 @@ void setup() {
 
   pinMode(CS_CH1, OUTPUT);
   pinMode(CS_CH2, OUTPUT);
-  
+
   CS_CH1_HIGH;
   CS_CH2_HIGH;
 
@@ -201,6 +204,14 @@ void toggle_GAL_SIG(void) {
 }
 
 void Timer2_Overflow_ISR() {
+
+  counter++;    // increment the devider counter
+  if (counter == 170) { // = 12 -> 250/12/2 = 10.4Hz ->Toggle frequency
+    counter = 0;
+    digitalWrite(STAT_LED, 1);
+  } else if (counter == 3) {
+    digitalWrite(STAT_LED, 0);
+  }
 
   ADC_Value_ch0 = MAX1416_ReadADC_CH1();
   ADC_Value_ch1 = MAX1416_ReadADC_CH2();
